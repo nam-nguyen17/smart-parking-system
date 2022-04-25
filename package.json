@@ -1,0 +1,27 @@
+{
+  "name": "smart-parking-system",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nam-nguyen17/smart-parking-system.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "morgan": "^1.9.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.6"
+  },
+  "bugs": {
+    "url": "https://github.com/nam-nguyen17/smart-parking-system/issues"
+  },
+  "homepage": "https://github.com/nam-nguyen17/smart-parking-system#readme"
+}
