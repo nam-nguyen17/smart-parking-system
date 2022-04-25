@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // Setup a default catch-all route that sends back a welcome message in JSON format.
 app.get('*', (req, res) =>
   res.status(200).send({
-    message: "Welcome to ET's Car Park Management System",
+    message: 'Welcome to Smart Parking Management System',
   })
 );
 
