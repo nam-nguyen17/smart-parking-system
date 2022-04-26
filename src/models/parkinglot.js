@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
   const ParkingLot = sequelize.define(
     'ParkingLot',
     {
-      parking_slot_id: DataTypes.NUMBER,
+      parking_slot_id: DataTypes.INTEGER,
     },
     {}
   );

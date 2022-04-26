@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     'Vehicle',
     {
       vehicle_number: DataTypes.STRING,
-      customerId: DataTypes.INTEGER,
+      // customerId: DataTypes.INTEGER,
     },
     {}
   );
