@@ -4,7 +4,6 @@ const Vehicle = require('../models').Vehicle;
 module.exports = {
   // Create
   create(req, res) {
-    console.log('req', req);
     return Customer.create({
       name: req.body.name,
       phone_number: req.body.phone_number,

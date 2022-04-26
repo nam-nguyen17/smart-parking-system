@@ -30,5 +30,8 @@ module.exports = (app) => {
   );
 
   //parking
-  app.post('/api/parking/:parkingSlotId/:vehicleId', parkingsController.create);
+  app.post('/api/parking', parkingsController.create);
+  app.delete('/api/parking', parkingsController.destroy);
+  app.get('/api/parking', parkingsController.list);
+  app.get('/api/parking/:parkingId', parkingsController.retrieve);
 };

@@ -44,11 +44,17 @@ module.exports = {
       })
       .catch((error) => res.status(400).send(error));
   },
+
   list(req, res) {
-    return Vehicle.all()
+    return Vehicle.findAll({
+      where: {
+        customerId: req.params.customerId,
+      },
+    })
       .then((vehicle) => res.status(200).send(vehicle))
       .catch((error) => res.status(400).send(error));
   },
+
   retrieve(req, res) {
     return Vehicle.findById(req.params.vehicleId, {
       include: [
