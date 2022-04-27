@@ -4,18 +4,36 @@ const Vehicle = require('../models').Vehicle;
 module.exports = {
   // Create
   create(req, res) {
-    return Customer.create({
-      name: req.body.name,
-      phone_number: req.body.phone_number,
+    if (!req.body.name || req.body.name === '') {
+      return res.status(400).send({ message: 'Name required' });
+    }
+    if (!req.body.phone_number || req.body.phone_number === '') {
+      return res.status(400).send({ message: 'Phone number required' });
+    }
+    return Customer.findOne({
+      where: {
+        phone_number: req.body.phone_number,
+      },
     })
-      .then((customer) => res.status(201).send(customer))
+      .then((customer) => {
+        if (customer) {
+          return res.status(409).send({
+            message: 'Customer record with this phone number already exists ',
+          });
+        } else {
+          Customer.create({
+            name: req.body.name,
+            phone_number: req.body.phone_number,
+          }).then((customer) => res.status(201).send(customer));
+        }
+      })
       .catch((error) => res.status(400).send(error));
   },
 
-  // List
+  // List all
   list(req, res) {
     return Customer.all()
-      .then((customers) => res.status(200).send(customers))
+      .then((customer) => res.status(200).send(customer))
       .catch((error) => res.status(400).send(error));
   },
 
@@ -25,7 +43,6 @@ module.exports = {
       include: [
         {
           model: Vehicle,
-          as: 'vehicles',
         },
       ],
     })
@@ -42,24 +59,37 @@ module.exports = {
 
   // Update
   update(req, res) {
-    return Customer.findById(req.params.customerId, {
-      include: [
-        {
-          model: Vehicle,
-          as: 'vehicles',
-        },
-      ],
+    return Customer.findOne({
+      where: {
+        phone_number: req.body.phone_number,
+      },
     })
       .then((customer) => {
-        if (!customer) {
-          return res.status(404).send({
-            message: 'Customer Not Found',
+        if (customer) {
+          return res.status(409).send({
+            message: 'Phone record already exists, try another slot ',
           });
+        } else {
+          return Customer.findById(req.params.customerId, {
+            include: [
+              {
+                model: Vehicle,
+              },
+            ],
+          })
+            .then((customer) => {
+              if (!customer) {
+                return res.status(404).send({
+                  message: 'Customer Not Found',
+                });
+              }
+              return customer
+                .update(req.body, { fields: Object.keys(req.body) })
+                .then(() => res.status(200).send(customer))
+                .catch((error) => res.status(400).send(error));
+            })
+            .catch((error) => res.status(400).send(error));
         }
-        return customer
-          .update(req.body, { fields: Object.keys(req.body) })
-          .then(() => res.status(200).send(customer)) // Send back the updated customer.
-          .catch((error) => res.status(400).send(error));
       })
       .catch((error) => res.status(400).send(error));
   },
@@ -69,15 +99,13 @@ module.exports = {
     return Customer.findById(req.params.customerId)
       .then((customer) => {
         if (!customer) {
-          return res.status(400).send({
+          return res.status(404).send({
             message: 'Customer Not Found',
           });
         }
         return customer
           .destroy()
-          .then(() =>
-            res.status(204).send({ message: 'Customer deleted successfully.' })
-          )
+          .then(() => res.status(204).send({ message: 'Message deleted' }))
           .catch((error) => res.status(400).send(error));
       })
       .catch((error) => res.status(400).send(error));

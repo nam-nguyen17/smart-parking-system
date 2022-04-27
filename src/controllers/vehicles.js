@@ -2,7 +2,11 @@ const Vehicle = require('../models').Vehicle;
 const Customer = require('../models').Customer;
 
 module.exports = {
+  // Create
   create(req, res) {
+    if (!req.body.vehicle_number || req.body.vehicle_number === '') {
+      return res.status(400).send({ message: 'Vehicle Licence required' });
+    }
     return Vehicle.findOne({
       where: {
         vehicle_number: req.body.vehicle_number,
@@ -24,37 +28,50 @@ module.exports = {
       .catch((error) => res.status(400).send(error));
   },
 
+  // Update
   update(req, res) {
-    return Vehicle.find({
+    return Vehicle.findOne({
       where: {
-        id: req.params.vehicleId,
-        customerId: req.params.customerId,
+        vehicle_number: req.body.vehicle_number,
       },
     })
       .then((vehicle) => {
-        if (!vehicle) {
-          return res.status(404).send({
-            message: 'Vehicle Not Found',
+        if (vehicle) {
+          return res.status(409).send({
+            message: 'Vehicle Licence is already in our system ',
           });
+        } else {
+          return Vehicle.find({
+            where: {
+              id: req.params.vehicleId,
+              customerId: req.params.customerId,
+            },
+          })
+            .then((vehicle) => {
+              if (!vehicle) {
+                return res.status(404).send({
+                  message: 'Vehicle Not Found',
+                });
+              }
+              return vehicle
+                .update(req.body, { fields: Object.keys(req.body) })
+                .then((updatedVehicle) => res.status(200).send(updatedVehicle))
+                .catch((error) => res.status(400).send(error));
+            })
+            .catch((error) => res.status(400).send(error));
         }
-        return vehicle
-          .update(req.body, { fields: Object.keys(req.body) })
-          .then((updatedVehicle) => res.status(200).send(updatedVehicle))
-          .catch((error) => res.status(400).send(error));
       })
       .catch((error) => res.status(400).send(error));
   },
 
+  // List all
   list(req, res) {
-    return Vehicle.findAll({
-      where: {
-        customerId: req.params.customerId,
-      },
-    })
+    return Vehicle.all()
       .then((vehicle) => res.status(200).send(vehicle))
       .catch((error) => res.status(400).send(error));
   },
 
+  // Retrieve
   retrieve(req, res) {
     return Vehicle.findById(req.params.vehicleId, {
       include: [
@@ -74,6 +91,7 @@ module.exports = {
       .catch((error) => res.status(400).send(error));
   },
 
+  // Delete
   destroy(req, res) {
     return Vehicle.find({
       where: {
