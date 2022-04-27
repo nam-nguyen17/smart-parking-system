@@ -43,14 +43,14 @@ module.exports = {
 
   // List all
   list(req, res) {
-    return Parking.all()
+    return Parking.findAll()
       .then((parking) => res.status(200).send(parking))
       .catch((error) => res.status(400).send(error));
   },
 
   // Retrieve
   retrieve(req, res) {
-    return Parking.findById(req.params.parkingId, {
+    return Parking.findByPk(req.params.parkingId, {
       include: [
         {
           model: Vehicle,

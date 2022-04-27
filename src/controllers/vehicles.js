@@ -66,14 +66,14 @@ module.exports = {
 
   // List all
   list(req, res) {
-    return Vehicle.all()
+    return Vehicle.findAll()
       .then((vehicle) => res.status(200).send(vehicle))
       .catch((error) => res.status(400).send(error));
   },
 
   // Retrieve
   retrieve(req, res) {
-    return Vehicle.findById(req.params.vehicleId, {
+    return Vehicle.findByPk(req.params.vehicleId, {
       include: [
         {
           model: Customer,

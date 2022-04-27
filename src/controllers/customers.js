@@ -32,14 +32,14 @@ module.exports = {
 
   // List all
   list(req, res) {
-    return Customer.all()
+    return Customer.findAll()
       .then((customer) => res.status(200).send(customer))
       .catch((error) => res.status(400).send(error));
   },
 
   // Retrieve
   retrieve(req, res) {
-    return Customer.findById(req.params.customerId, {
+    return Customer.findByPk(req.params.customerId, {
       include: [
         {
           model: Vehicle,
@@ -96,7 +96,7 @@ module.exports = {
 
   // Delete
   destroy(req, res) {
-    return Customer.findById(req.params.customerId)
+    return Customer.findByPk(req.params.customerId)
       .then((customer) => {
         if (!customer) {
           return res.status(404).send({
