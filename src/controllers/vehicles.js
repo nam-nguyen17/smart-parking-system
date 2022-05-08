@@ -5,7 +5,7 @@ module.exports = {
   // Create
   create(req, res) {
     if (!req.body.vehicle_number || req.body.vehicle_number === '') {
-      return res.status(400).send({ message: 'Vehicle Licence required' });
+      return res.status(400).send({ message: 'Vehicle License required' });
     }
     return Vehicle.findOne({
       where: {
